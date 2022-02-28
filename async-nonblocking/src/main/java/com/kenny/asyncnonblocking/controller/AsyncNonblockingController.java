@@ -47,7 +47,7 @@ public class AsyncNonblockingController {
      *    ㄴ Http Request는 NonBlocking
      *    ㄴ DBIO는 Blocking
      */
-    @GetMapping("/async-nonblocking/delay/{second}")
+    @GetMapping("/async-blocking/delay/{second}")
     public Mono<String> getAsyncBlocking(@PathVariable("second") final String second ) throws InterruptedException {
         log.debug( "__KENNY__ getAsyncNonblocking() START : {}", second);
 

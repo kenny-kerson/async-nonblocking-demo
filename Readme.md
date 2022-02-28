@@ -3,6 +3,7 @@
 
 ## # TL;DR
 - Async-Nonblocking이 가장 성능이 뛰어남  
+- Async Blocking과 Nonblocking은 쓰레드수는 차이가 안났지만, latency 차이가 확연히 발생했음
 ( 위 결과는 단순히 active thread수만을 지표로 판단한 결과임 )
 
 ## # 모듈구성
@@ -45,16 +46,22 @@
 - concurrency : 200 user
 - ramp-up time : 1s
 - loop : infinite
-- Active Thread : x vs y
+- Active Thread count : 247 vs 53
 
 ### Sync-Blocking vs Async-Blocking
 - concurrency : 200 user
 - ramp-up time : 1s
 - loop : infinite
-- Active Thread : x vs y
+- Active Thread count : 247 vs 53
 
 ### Async-Blocking vs Async-Nonblocking
-- concurrency : 200 user
+- concurrency : 1000 user
 - ramp-up time : 1s
 - loop : infinite
-- Active Thread : x vs y
+- Active Thread count : 53 vs 53
+  - 왜 여기서 쓰레드수는 더 증가하지 않을까??
+- Latency : avg 15934ms vs 5509ms 
+
+
+### 성능모니터링 Unix Command
+- 23672의 쓰레드수 1초마다 모니터링 : `watch -n 1 'ps -p 23672 -M | wc -l'`
