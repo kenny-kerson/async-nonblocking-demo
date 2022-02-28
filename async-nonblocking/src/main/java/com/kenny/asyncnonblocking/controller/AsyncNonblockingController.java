@@ -1,5 +1,6 @@
 package com.kenny.asyncnonblocking.controller;
 
+import com.kenny.asyncnonblocking.repository.SimpleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +19,10 @@ import java.util.concurrent.ExecutionException;
 public class AsyncNonblockingController {
 
     private final WebClient webClient;
+    private final SimpleRepository simpleRepository;
 
     @GetMapping("/async-nonblocking/delay/{second}")
-    public Mono<String> getAsyncNonblocking(@PathVariable("second") final String second ) {
+    public Mono<String> getAsyncNonblocking(@PathVariable("second") final String second ) throws InterruptedException {
         log.debug( "__KENNY__ getAsyncNonblocking() START : {}", second);
 
         final Mono<String> responseMono = webClient.get()
@@ -32,37 +34,9 @@ public class AsyncNonblockingController {
 
         responseMono.subscribe(System.out::println);
 
+        // Blocking IO 호출
+        simpleRepository.findAll();
+
         return responseMono;
-    }
-
-
-    @GetMapping("/async-nonblocking/delay2/{second}")
-    public Mono<String> getAsyncNonblocking2(@PathVariable("second") final String second ) throws ExecutionException, InterruptedException {
-        log.debug( "__KENNY__ getAsyncNonblocking() START : {}", second);
-
-        final CompletableFuture<Mono<String>> cf = CompletableFuture.supplyAsync(() -> {
-            final Mono<String> responseMono = webClient.get()
-                    .uri("/remote-server/dummy/" + second)
-                    .retrieve()
-                    .bodyToMono(String.class);
-
-            log.debug("__KENNY__ webClient call completed!! responseMono : {}", responseMono);
-
-            return responseMono;
-        });
-
-        log.debug( "__KENNY__ CompletableFuture.supplyAsync() done!!");
-
-        final Mono<String> stringMono = cf.get();
-
-        log.debug( "__KENNY__ CompletableFuture get() done!!");
-
-        stringMono.subscribe(System.out::println);
-//        final String response = stringMono.block();
-//
-//        log.debug( "__KENNY__ mono block() done!! : {}", response);
-//
-//        return response;
-        return stringMono;
     }
 }

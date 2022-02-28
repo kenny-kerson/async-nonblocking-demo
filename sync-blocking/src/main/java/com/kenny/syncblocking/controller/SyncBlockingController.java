@@ -1,5 +1,6 @@
 package com.kenny.syncblocking.controller;
 
+import com.kenny.syncblocking.repository.SimpleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -14,9 +15,10 @@ import org.springframework.web.client.RestTemplate;
 public class SyncBlockingController {
 
     private final RestTemplate restTemplate;
+    private final SimpleRepository simpleRepository;
 
     @GetMapping("/sync-blocking/delay/{second}")
-    public void getSyncBlocking(@PathVariable("second") String second) {
+    public void getSyncBlocking(@PathVariable("second") String second) throws InterruptedException {
         log.debug( "__KENNY__ getSyncBlocking() START : {}", second);
 
         final HttpHeaders httpHeaders = new HttpHeaders();
@@ -30,5 +32,8 @@ public class SyncBlockingController {
         );
 
         log.debug( "__KENNY__ responseEntity.getBody() : {}", responseEntity.getBody() );
+
+        // Blocking IO
+        simpleRepository.findAll();
     }
 }
