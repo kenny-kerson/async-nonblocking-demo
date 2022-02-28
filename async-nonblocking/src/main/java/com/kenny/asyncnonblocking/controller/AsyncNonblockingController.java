@@ -21,10 +21,14 @@ public class AsyncNonblockingController {
     private final WebClient webClient;
     private final SimpleRepository simpleRepository;
 
+    /**
+     * Async-Nonblocking 테스트 API
+     */
     @GetMapping("/async-nonblocking/delay/{second}")
-    public Mono<String> getAsyncNonblocking(@PathVariable("second") final String second ) throws InterruptedException {
+    public Mono<String> getAsyncNonblocking(@PathVariable("second") final String second ) {
         log.debug( "__KENNY__ getAsyncNonblocking() START : {}", second);
 
+        // WebClient + Mono = Async + NonBlockingk
         final Mono<String> responseMono = webClient.get()
                 .uri("/remote-server/dummy/" + second)
                 .retrieve()
@@ -33,6 +37,30 @@ public class AsyncNonblockingController {
         log.debug( "__KENNY__ webClient call completed!! responseMono : {}", responseMono );
 
         responseMono.subscribe(System.out::println);
+
+        return responseMono;
+    }
+
+
+    /**
+     * Async-Blocking 테스트 API
+     *    ㄴ Http Request는 NonBlocking
+     *    ㄴ DBIO는 Blocking
+     */
+    @GetMapping("/async-nonblocking/delay/{second}")
+    public Mono<String> getAsyncBlocking(@PathVariable("second") final String second ) throws InterruptedException {
+        log.debug( "__KENNY__ getAsyncNonblocking() START : {}", second);
+
+        // WebClient + Mono = Async + NonBlocking
+        final Mono<String> responseMono = webClient.get()
+                .uri("/remote-server/dummy/" + second)
+                .retrieve()
+                .bodyToMono(String.class)
+        ;
+
+        responseMono.subscribe(System.out::println);
+
+        log.debug( "__KENNY__ webClient call completed!! responseMono : {}", responseMono );
 
         // Blocking IO 호출
         simpleRepository.findAll();

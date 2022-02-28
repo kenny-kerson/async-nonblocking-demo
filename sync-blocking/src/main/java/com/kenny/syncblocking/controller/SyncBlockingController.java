@@ -17,6 +17,9 @@ public class SyncBlockingController {
     private final RestTemplate restTemplate;
     private final SimpleRepository simpleRepository;
 
+    /**
+     * Sync-Blocking 테스트 API
+     */
     @GetMapping("/sync-blocking/delay/{second}")
     public void getSyncBlocking(@PathVariable("second") String second) throws InterruptedException {
         log.debug( "__KENNY__ getSyncBlocking() START : {}", second);
@@ -25,6 +28,7 @@ public class SyncBlockingController {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         final HttpEntity<Object> httpEntity = new HttpEntity<>(httpHeaders);
 
+        // RestTemplate = Sync + Blocking
         final ResponseEntity<String> responseEntity = restTemplate.exchange("http://localhost:8093/remote-server/dummy/" + second
                 , HttpMethod.GET
                 , httpEntity
