@@ -2,9 +2,7 @@ package com.kenny.syncblocking.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,14 +17,18 @@ public class SyncBlockingController {
 
     @GetMapping("/sync-blocking/delay/{second}")
     public void getSyncBlocking(@PathVariable("second") String second) {
-        log.debug( "__KENN__ getSyncBlocking() START : {}", second);
+        log.debug( "__KENNY__ getSyncBlocking() START : {}", second);
 
-//        new HttpEntity<>()
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        final HttpEntity<Object> httpEntity = new HttpEntity<>(httpHeaders);
 
-//        restTemplate.exchange( "/remote-server/delay/" + second
-//                , HttpMethod.GET
-//                ,
-//                , String.class
-//        );
+        final ResponseEntity<String> responseEntity = restTemplate.exchange("http://localhost:8093/remote-server/dummy/" + second
+                , HttpMethod.GET
+                , httpEntity
+                , String.class
+        );
+
+        log.debug( "__KENNY__ responseEntity.getBody() : {}", responseEntity.getBody() );
     }
 }
