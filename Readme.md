@@ -4,6 +4,7 @@
 ## # TL;DR
 - Async-Nonblocking이 가장 성능이 뛰어남  
 - Async Blocking과 Nonblocking은 쓰레드수는 차이가 안났지만, latency 차이가 확연히 발생했음
+- 동기, 비동기, 블럭킹, 넌블럭킹 정리내용 : https://bit.ly/3JYU8S0˚
 ( 위 결과는 단순히 active thread수만을 지표로 판단한 결과임 )
 
 ## # 모듈구성
