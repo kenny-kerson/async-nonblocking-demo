@@ -2,7 +2,8 @@
 - 동기, 비동기, 블럭킹, 넌블럭킹을 이해하기 위한 데모 프로젝트
 
 ## # TL;DR
-
+- Async-Nonblocking이 가장 성능이 뛰어남  
+( 위 결과는 단순히 active thread수만을 지표로 판단한 결과임 )
 
 ## # 모듈구성
 ### 1. sync-blocking
